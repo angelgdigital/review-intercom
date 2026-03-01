@@ -1,643 +1,826 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Intercom · Tu experiencia</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>INTERCOM · Calificación del servicio</title>
 
-:root {
-  --bg:          #060C14;
-  --surface:     #0D1825;
-  --surface2:    #111F30;
-  --border:      rgba(0,160,255,0.11);
-  --border-hard: #1A2D42;
-  --blue:        #00A0FF;
-  --blue-dim:    rgba(0,160,255,0.14);
-  --blue-glow:   rgba(0,160,255,0.28);
-  --text:        #E8F4FF;
-  --muted:       #4E6E8A;
-  --mid:         #7AACC6;
-  --green:       #00D084;
-  --amber:       #FFA032;
-  --danger:      #E05757;
-}
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
-html, body {
-  min-height: 100vh;
-  background: var(--bg);
-  font-family: 'DM Sans', sans-serif;
-  color: var(--text);
-  overflow-x: hidden;
-}
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  background:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0,160,255,0.10) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 45% at 90% 85%,  rgba(0,160,255,0.05) 0%, transparent 60%);
-  pointer-events: none; z-index: 0;
-}
+    :root{
+      /* Colores corporativos */
+      --cyan:   #00BFFF;
+      --teal:   #008B8B;
+      --orange: #FF8C00;
+      --white:  #FFFFFF;
+      --navy:   #001F3F;
 
-canvas#fiber {
-  position: fixed; inset: 0; z-index: 0;
-  opacity: 0.38; pointer-events: none;
-}
+      /* UI */
+      --bg: #020913;
+      --surface: rgba(255,255,255,.06);
+      --surface2: rgba(255,255,255,.08);
+      --border: rgba(0,191,255,.18);
+      --border2: rgba(255,255,255,.10);
 
-.wrapper {
-  position: relative; z-index: 1;
-  min-height: 100vh;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  padding: 48px 20px 56px;
-}
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.64);
+      --muted2: rgba(255,255,255,.48);
 
-/* ── LOGO FLOTANTE ─────────────────────── */
-.logo-section {
-  display: flex; flex-direction: column; align-items: center;
-  margin-bottom: 24px;
-  animation: fadeUp .7s ease both;
-}
-.logo-box {
-  width: 82px; height: 82px; border-radius: 22px;
-  background: var(--surface); border: 1px solid var(--border-hard);
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: 11px;
-  box-shadow: 0 8px 32px rgba(0,0,0,.55), 0 0 0 1px rgba(0,160,255,.05);
-  position: relative; overflow: hidden;
-}
-.logo-box::after {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--blue), transparent);
-  opacity: .35;
-}
-.logo-box img { width: 62px; height: 62px; object-fit: contain; filter: drop-shadow(0 0 10px rgba(0,160,255,.2)); }
-.logo-box .logo-ic { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 800; color: var(--blue); display: none; }
-.logo-sub {
-  font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
-  color: var(--muted); display: flex; align-items: center; gap: 7px;
-}
-.bars { display: flex; align-items: flex-end; gap: 2px; height: 10px; }
-.bars span { width: 2px; background: var(--blue); border-radius: 1px; }
-.bars span:nth-child(1) { height: 3px; opacity: .9; }
-.bars span:nth-child(2) { height: 5px; opacity: .9; }
-.bars span:nth-child(3) { height: 8px; opacity: .9; }
-.bars span:nth-child(4) { height: 10px; opacity: .3; }
-.bars span:nth-child(5) { height: 10px; opacity: .3; }
+      --success: #00D084;
+      --danger:  #FF5C5C;
 
-/* ── CARD ──────────────────────────────── */
-.card {
-  width: 100%; max-width: 400px;
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 20px; padding: 36px 28px;
-  box-shadow: 0 24px 64px rgba(0,0,0,.55), 0 0 0 1px rgba(0,160,255,.04);
-  position: relative; overflow: hidden;
-  animation: fadeUp .7s .1s ease both;
-}
-.card::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--blue), transparent);
-  opacity: .45;
-}
-
-/* ── PANTALLAS ─────────────────────────── */
-.screen { display: none; }
-.screen.active { display: block; }
-
-/* ── MUNICIPIO ─────────────────────────── */
-.mun-label { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
-.mun-wrap { position: relative; margin-bottom: 28px; }
-.mun-wrap select {
-  width: 100%; padding: 10px 34px 10px 13px;
-  background: var(--surface2); border: 1px solid var(--border-hard);
-  border-radius: 9px; color: var(--text);
-  font-family: 'DM Sans', sans-serif; font-size: 13px;
-  outline: none; appearance: none; cursor: pointer; transition: border-color .2s;
-}
-.mun-wrap select:focus { border-color: rgba(0,160,255,.4); }
-.mun-wrap::after { content: '▾'; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 12px; pointer-events: none; }
-.mun-wrap select option { background: var(--surface); }
-
-/* ── PREGUNTA ──────────────────────────── */
-.question { font-family: 'Syne', sans-serif; font-size: clamp(18px,5vw,22px); font-weight: 700; text-align: center; line-height: 1.3; margin-bottom: 5px; }
-.question-sub { font-size: 11px; color: var(--muted); text-align: center; font-style: italic; margin-bottom: 28px; }
-
-/* ── ESTRELLAS ─────────────────────────── */
-/* Square badges (intercom-review) + hover suave (evaluacion-nfc) */
-.stars-row { display: flex; justify-content: center; gap: 7px; margin-bottom: 10px; }
-.star-btn { background: none; border: none; cursor: pointer; padding: 3px; -webkit-tap-highlight-color: transparent; position: relative; transition: transform .15s; }
-.star-btn:active { transform: scale(.88); }
-.star-outer { width: 48px; height: 48px; background: var(--surface2); border: 1px solid var(--border-hard); border-radius: 11px; display: flex; align-items: center; justify-content: center; transition: background .2s, box-shadow .2s, transform .2s, border-color .2s; }
-.star-outer svg { width: 22px; height: 22px; }
-.star-outer svg path { fill: #1E3448; transition: fill .2s; }
-.star-btn.hover .star-outer { background: var(--blue-dim); border-color: rgba(0,160,255,.3); box-shadow: 0 0 14px rgba(0,160,255,.2); }
-.star-btn.hover .star-outer svg path { fill: var(--blue); }
-.star-btn.lit .star-outer { background: var(--blue-dim); border-color: rgba(0,160,255,.3); }
-.star-btn.lit .star-outer svg path { fill: var(--blue); }
-.star-btn.selected .star-outer { background: rgba(0,160,255,.22); border-color: rgba(0,160,255,.55); transform: scale(1.1); box-shadow: 0 0 22px rgba(0,160,255,.35); }
-.star-btn.selected .star-outer svg path { fill: var(--blue); }
-.star-num { position: absolute; bottom: -1px; right: -1px; width: 15px; height: 15px; background: var(--surface); border: 1px solid var(--border-hard); border-radius: 50%; font-size: 8px; font-weight: 700; color: var(--muted); display: flex; align-items: center; justify-content: center; }
-.star-btn.lit .star-num, .star-btn.hover .star-num, .star-btn.selected .star-num { color: var(--blue); border-color: rgba(0,160,255,.45); }
-.rating-label { text-align: center; font-size: 13px; font-weight: 500; color: var(--blue); min-height: 20px; letter-spacing: .04em; margin-bottom: 2px; }
-
-/* ── CHIPS ─────────────────────────────── */
-.chips-row { display: flex; gap: 6px; justify-content: space-between; margin: 10px 0 22px; }
-.chip { flex: 1; padding: 8px 4px; background: var(--surface2); border: 1px solid var(--border-hard); border-radius: 9px; font-size: 10px; text-align: center; color: var(--muted); cursor: pointer; transition: all .2s; -webkit-tap-highlight-color: transparent; line-height: 1.4; }
-.chip.active { background: var(--blue-dim); border-color: rgba(0,160,255,.38); color: var(--blue); }
-
-/* ── BOTÓN CONFIRMAR ───────────────────── */
-.confirm-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px; background: var(--blue); color: var(--bg); border: none; border-radius: 11px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: .05em; cursor: pointer; transition: opacity .2s, transform .15s, box-shadow .2s; opacity: 0; pointer-events: none; margin-top: 18px; box-shadow: 0 4px 20px rgba(0,160,255,.28); }
-.confirm-btn.visible { opacity: 1; pointer-events: all; animation: fadeUp .35s ease both; }
-.confirm-btn:hover  { box-shadow: 0 8px 28px rgba(0,160,255,.4); transform: translateY(-1px); }
-.confirm-btn:active { transform: scale(.97); opacity: .85; }
-
-/* ── PANTALLA GOOGLE ───────────────────── */
-.check-circle { width: 64px; height: 64px; background: rgba(0,208,132,.1); border: 1px solid rgba(0,208,132,.28); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; animation: pop .4s cubic-bezier(.34,1.56,.64,1) both; }
-.check-circle svg { width: 28px; height: 28px; }
-.pos-title { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 8px; }
-.pos-sub { font-size: 13px; color: var(--mid); text-align: center; line-height: 1.6; }
-.divider { display: flex; align-items: center; gap: 12px; margin: 22px 0; color: var(--muted); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
-.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border-hard); }
-.google-prompt { font-size: 13px; color: var(--mid); text-align: center; margin-bottom: 16px; line-height: 1.55; }
-.google-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 14px; background: #fff; color: #111; border: none; border-radius: 11px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; text-decoration: none; cursor: pointer; box-shadow: 0 4px 20px rgba(255,255,255,.08); transition: transform .15s, box-shadow .15s; }
-.google-btn:hover  { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,255,255,.14); }
-.google-btn:active { transform: scale(.97); }
-.google-btn svg    { width: 20px; height: 20px; flex-shrink: 0; }
-/* "Quizás luego" de evaluacion-nfc */
-.skip-link { display: block; text-align: center; margin-top: 12px; padding: 12px; font-size: 12px; letter-spacing: .1em; color: var(--muted); cursor: pointer; text-transform: uppercase; border: 1px solid var(--border-hard); border-radius: 11px; transition: color .2s, border-color .2s; -webkit-tap-highlight-color: transparent; }
-.skip-link:hover { color: var(--mid); border-color: rgba(0,160,255,.25); }
-
-/* ── FORMULARIO ────────────────────────── */
-/* progress dots de evaluacion-nfc */
-.progress-dots { display: flex; justify-content: center; gap: 6px; margin-bottom: 22px; }
-.pdot { width: 6px; height: 6px; border-radius: 50%; background: var(--border-hard); transition: all .3s; }
-.pdot.active { background: var(--blue); width: 20px; border-radius: 3px; }
-.form-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-.form-icon { width: 44px; height: 44px; background: rgba(255,160,50,.09); border: 1px solid rgba(255,160,50,.18); border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.form-icon svg { width: 22px; height: 22px; }
-.form-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; line-height: 1.2; }
-.form-sub { font-size: 11px; color: var(--muted); margin-top: 2px; font-style: italic; }
-.wa-notice { display: flex; align-items: flex-start; gap: 9px; background: rgba(37,211,102,.07); border: 1px solid rgba(37,211,102,.18); border-radius: 9px; padding: 11px 13px; font-size: 12px; color: #25d366; margin-bottom: 18px; line-height: 1.5; }
-.wa-notice svg { flex-shrink: 0; margin-top: 1px; }
-/* selected-badge de evaluacion-nfc */
-.selected-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--blue-dim); border: 1px solid rgba(0,160,255,.22); border-radius: 20px; padding: 5px 14px; font-size: 13px; color: #5cc8ff; margin-bottom: 18px; }
-.field { margin-bottom: 14px; }
-.field label { display: block; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
-.field input, .field select, .field textarea { width: 100%; padding: 11px 14px; background: var(--surface2); border: 1px solid var(--border-hard); border-radius: 9px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--text); outline: none; transition: border-color .2s; resize: none; appearance: none; }
-.field input::placeholder, .field textarea::placeholder { color: var(--muted); opacity: .55; }
-.field input:focus, .field select:focus, .field textarea:focus { border-color: rgba(0,160,255,.38); }
-.field textarea { min-height: 90px; }
-.field select option { background: var(--surface); }
-.tel-row { display: flex; gap: 8px; }
-.tel-row select { width: 108px; flex-shrink: 0; }
-.tel-row input  { flex: 1; }
-.field-msg { font-size: 11px; margin-top: 5px; display: none; }
-.field-msg.err { color: var(--danger); }
-.field-msg.ok  { color: var(--green); }
-.submit-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px; background: var(--blue); color: var(--bg); border: none; border-radius: 11px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: transform .15s, box-shadow .2s, opacity .15s; margin-top: 4px; box-shadow: 0 4px 20px rgba(0,160,255,.25); }
-.submit-btn:hover  { transform: translateY(-1px); box-shadow: 0 8px 28px rgba(0,160,255,.35); }
-.submit-btn:active { transform: scale(.97); opacity: .88; }
-.cancel-btn { display: flex; align-items: center; justify-content: center; width: 100%; padding: 12px; margin-top: 10px; background: transparent; border: 1px solid var(--border-hard); color: var(--muted); border-radius: 11px; font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: border-color .2s, color .2s; -webkit-tap-highlight-color: transparent; }
-.cancel-btn:hover { border-color: rgba(0,160,255,.28); color: var(--mid); }
-
-/* ── GRACIAS ───────────────────────────── */
-.thanks-wrap { text-align: center; padding: 8px 0; }
-.thanks-anim { width: 72px; height: 72px; background: var(--blue-dim); border: 1px solid rgba(0,160,255,.28); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; animation: pop .4s cubic-bezier(.34,1.56,.64,1) both; box-shadow: 0 0 32px rgba(0,160,255,.18); }
-.thanks-anim svg { width: 32px; height: 32px; }
-.thanks-title { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 800; margin-bottom: 10px; }
-.thanks-sub { font-size: 13px; color: var(--mid); line-height: 1.7; max-width: 290px; margin: 0 auto 22px; }
-.fiber-badge { display: inline-flex; align-items: center; gap: 7px; padding: 8px 16px; background: var(--surface2); border: 1px solid var(--border-hard); border-radius: 20px; font-size: 11px; letter-spacing: .1em; color: var(--muted); text-transform: uppercase; }
-.fiber-badge .pulse { width: 6px; height: 6px; background: var(--blue); border-radius: 50%; animation: blink 2s ease infinite; }
-.home-btn { display: inline-flex; align-items: center; justify-content: center; padding: 11px 22px; margin-top: 20px; border: 1px solid var(--border-hard); color: var(--muted); background: transparent; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: border-color .2s, color .2s; }
-.home-btn:hover { border-color: rgba(0,160,255,.3); color: var(--mid); }
-
-/* ── FOOTER ────────────────────────────── */
-.footer { margin-top: 24px; text-align: center; animation: fadeUp .7s .25s ease both; }
-.footer-top { font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); opacity: .55; }
-.footer-top a { color: inherit; text-decoration: none; }
-.footer-credit { margin-top: 9px; font-size: 11px; color: var(--muted); opacity: .4; letter-spacing: .04em; transition: opacity .2s; }
-.footer-credit:hover { opacity: .75; }
-.footer-credit a { color: var(--blue); text-decoration: none; font-weight: 500; }
-
-/* ── KEYFRAMES ─────────────────────────── */
-@keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes pop    { from { transform: scale(.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-@keyframes blink  { 0%,100% { opacity: 1; } 50% { opacity: .28; } }
-</style>
-</head>
-<body>
-
-<canvas id="fiber"></canvas>
-
-<div class="wrapper">
-
-  <!-- ── LOGO FLOTANTE (de evaluacion-nfc) ── -->
-  <div class="logo-section">
-    <div class="logo-box">
-      <img src="./logo.png" alt="Intercom"
-           onerror="this.style.display='none';document.querySelector('.logo-ic').style.display='block'">
-      <span class="logo-ic">IC</span>
-    </div>
-    <span class="logo-sub">
-      <span class="bars"><span></span><span></span><span></span><span></span><span></span></span>
-      Fibra óptica · Boyacá
-    </span>
-  </div>
-
-  <!-- ══════════════ CARD ══════════════ -->
-  <div class="card">
-
-    <!-- ── S1: CALIFICACIÓN ── -->
-    <div class="screen active" id="screenRating">
-      <div class="mun-label">Tu municipio · Your municipality</div>
-      <div class="mun-wrap">
-        <select id="municipioSelect" onchange="onMunChange()">
-          <option value="">Selecciona tu municipio...</option>
-          <option value="villa_de_leyva">Villa de Leyva</option>
-          <option value="sachica">Sáchica</option>
-          <option value="raquira">Ráquira</option>
-          <option value="tinjaca">Tinjacá</option>
-          <option value="sutamarchan">Sutamarchán</option>
-        </select>
-      </div>
-
-      <div class="question">¿Cómo calificarías nuestro servicio?</div>
-      <div class="question-sub">How would you rate our service?</div>
-
-      <!-- Stars: square badges + hover suave -->
-      <div class="stars-row" id="starsRow">
-        <button class="star-btn" data-val="1" onclick="selectStar(1)" aria-label="1 estrella">
-          <div class="star-outer"><svg viewBox="0 0 24 24"><path d="M12 2l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17l-5.8 3 .1-.1 1-6.4L2.6 8.8l6.5-.9z"/></svg></div>
-          <div class="star-num">1</div>
-        </button>
-        <button class="star-btn" data-val="2" onclick="selectStar(2)" aria-label="2 estrellas">
-          <div class="star-outer"><svg viewBox="0 0 24 24"><path d="M12 2l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17l-5.8 3 .1-.1 1-6.4L2.6 8.8l6.5-.9z"/></svg></div>
-          <div class="star-num">2</div>
-        </button>
-        <button class="star-btn" data-val="3" onclick="selectStar(3)" aria-label="3 estrellas">
-          <div class="star-outer"><svg viewBox="0 0 24 24"><path d="M12 2l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17l-5.8 3 .1-.1 1-6.4L2.6 8.8l6.5-.9z"/></svg></div>
-          <div class="star-num">3</div>
-        </button>
-        <button class="star-btn" data-val="4" onclick="selectStar(4)" aria-label="4 estrellas">
-          <div class="star-outer"><svg viewBox="0 0 24 24"><path d="M12 2l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17l-5.8 3 .1-.1 1-6.4L2.6 8.8l6.5-.9z"/></svg></div>
-          <div class="star-num">4</div>
-        </button>
-        <button class="star-btn" data-val="5" onclick="selectStar(5)" aria-label="5 estrellas">
-          <div class="star-outer"><svg viewBox="0 0 24 24"><path d="M12 2l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17l-5.8 3 .1-.1 1-6.4L2.6 8.8l6.5-.9z"/></svg></div>
-          <div class="star-num">5</div>
-        </button>
-      </div>
-      <div class="rating-label" id="ratingLabel"></div>
-
-      <div class="chips-row" id="chipsRow" style="display:none">
-        <div class="chip" id="chipV" onclick="toggleChip('chipV')">📶 Velocidad</div>
-        <div class="chip" id="chipE" onclick="toggleChip('chipE')">🔗 Estabilidad</div>
-        <div class="chip" id="chipA" onclick="toggleChip('chipA')">🎧 Atención</div>
-      </div>
-
-      <button class="confirm-btn" id="confirmBtn" onclick="confirmRating()">
-        Continuar
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-      </button>
-    </div>
-
-    <!-- ── S2: GOOGLE ── -->
-    <div class="screen" id="screenGoogle">
-      <div class="check-circle">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#00D084" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-      </div>
-      <div class="pos-title">¡Nos alegra mucho!</div>
-      <div class="pos-sub">Gracias por confiar en Intercom.<br>Tu conexión, nuestra misión.</div>
-      <div class="divider">comparte tu opinión</div>
-      <div class="google-prompt">¿Nos ayudas con una reseña en Google? Solo toma 30 segundos y ayuda a otros usuarios de la región a conocernos.</div>
-      <a class="google-btn" id="googleLink"
-         href="https://search.google.com/local/writereview?placeid=PLACE_ID_INTERCOM"
-         target="_blank" onclick="onGoogleClick()">
-        <svg viewBox="0 0 24 24">
-          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
-          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-        </svg>
-        Escribir reseña en Google
-      </a>
-      <span class="skip-link" onclick="goThanks('skip')">Quizás luego</span>
-    </div>
-
-    <!-- ── S3: FORMULARIO ── -->
-    <div class="screen" id="screenForm">
-      <!-- progress dots de evaluacion-nfc -->
-      <div class="progress-dots">
-        <div class="pdot active"></div>
-        <div class="pdot"></div>
-      </div>
-
-      <div class="form-header">
-        <div class="form-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#FFA032" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-          </svg>
-        </div>
-        <div>
-          <div class="form-title">Cuéntanos qué pasó</div>
-          <div class="form-sub">Tell us what happened</div>
-        </div>
-      </div>
-
-      <div class="wa-notice">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="#25d366">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-          <path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.122 1.533 5.856L0 24l6.335-1.519A11.932 11.932 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-4.964-1.346l-.357-.212-3.76.901.944-3.667-.232-.376A9.818 9.818 0 1112 21.818z"/>
-        </svg>
-        Tu reporte llega directo al equipo técnico de Intercom vía WhatsApp.
-      </div>
-
-      <!-- selected-badge de evaluacion-nfc -->
-      <div class="selected-badge" id="negBadge">★ 1 estrella</div>
-
-      <div class="field">
-        <label>Municipio</label>
-        <select id="formMunicipio">
-          <option value="">Selecciona...</option>
-          <option value="Villa de Leyva">Villa de Leyva</option>
-          <option value="Sáchica">Sáchica</option>
-          <option value="Ráquira">Ráquira</option>
-          <option value="Tinjacá">Tinjacá</option>
-          <option value="Sutamarchán">Sutamarchán</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Nombre · Name</label>
-        <input type="text" id="inputName" placeholder="Tu nombre...">
-      </div>
-      <div class="field">
-        <label>Teléfono / WhatsApp (opcional)</label>
-        <div class="tel-row">
-          <select id="lada">
-            <option value="+57" selected>🇨🇴 +57</option>
-            <option value="+1">🇺🇸 +1</option>
-            <option value="+52">🇲🇽 +52</option>
-            <option value="+54">🇦🇷 +54</option>
-            <option value="+34">🇪🇸 +34</option>
-          </select>
-          <input type="tel" id="inputPhone" placeholder="3XX XXX XXXX"
-                 oninput="validateTel()" onblur="validateTel()">
-        </div>
-        <div class="field-msg err" id="telErr">⚠ Número no válido (solo dígitos, mín. 7).</div>
-        <div class="field-msg ok"  id="telOk">✓ Número válido</div>
-      </div>
-      <div class="field">
-        <label>¿Qué problema tienes? · What's the issue?</label>
-        <textarea id="inputComment"
-          placeholder="Ej: Sin señal desde esta mañana, velocidad lenta, problemas con TV...&#10;E.g. No signal, slow speed, TV issues..."></textarea>
-      </div>
-
-      <button class="submit-btn" onclick="submitForm()">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-        </svg>
-        Enviar reporte · Send report
-      </button>
-      <button class="cancel-btn" onclick="goHome()">Cancelar</button>
-    </div>
-
-    <!-- ── S4: GRACIAS ── -->
-    <div class="screen" id="screenThanks">
-      <div class="thanks-wrap">
-        <div class="thanks-anim">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#00A0FF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="20 6 9 17 4 12"/>
-          </svg>
-        </div>
-        <div class="thanks-title" id="thanksTitle">¡Gracias!</div>
-        <div class="thanks-sub"   id="thanksSub">Tu opinión nos ayuda a mejorar el servicio en tu municipio.</div>
-        <div class="fiber-badge"><div class="pulse"></div>Intercom Fibra Óptica</div>
-        <br>
-        <button class="home-btn" onclick="goHome()">← Volver al inicio</button>
-      </div>
-    </div>
-
-  </div><!-- /card -->
-
-  <!-- ── FOOTER ── -->
-  <div class="footer">
-    <div class="footer-top">
-      <a href="https://intercomst.com.co" target="_blank">intercomst.com.co</a>
-      &nbsp;·&nbsp; Villa de Leyva · Sáchica · Ráquira · Tinjacá · Sutamarchán
-    </div>
-    <div class="footer-credit">
-      by <a href="https://instagram.com/angelgutierrezdigital" target="_blank">@angelgutierrezdigital</a>
-    </div>
-  </div>
-
-</div>
-
-<script>
-// ══════════════════════════════════════════════════
-// CONFIG
-// ══════════════════════════════════════════════════
-var CFG = {
-  waSoporte: "573203865852",
-  placeIds: {
-    villa_de_leyva: "PLACE_ID_VILLA_DE_LEYVA",
-    sachica:        "PLACE_ID_SACHICA",
-    raquira:        "PLACE_ID_RAQUIRA",
-    tinjaca:        "PLACE_ID_TINJACA",
-    sutamarchan:    "PLACE_ID_SUTAMARCHAN",
-    _default:       "PLACE_ID_PRINCIPAL"
-  },
-  munNames: {
-    villa_de_leyva: "Villa de Leyva",
-    sachica:        "Sáchica",
-    raquira:        "Ráquira",
-    tinjaca:        "Tinjacá",
-    sutamarchan:    "Sutamarchán"
-  }
-};
-
-// ══════════════════════════════════════════════════
-// FIBER CANVAS
-// ══════════════════════════════════════════════════
-(function(){
-  var c=document.getElementById('fiber'), x=c.getContext('2d'), pts=[];
-  function rsz(){ c.width=innerWidth; c.height=innerHeight; }
-  rsz(); addEventListener('resize',rsz);
-  for(var i=0;i<20;i++) pts.push({ x:Math.random()*innerWidth, y:Math.random()*innerHeight, vx:(Math.random()-.5)*.42, vy:(Math.random()-.5)*.42, r:Math.random()*1.8+.4 });
-  function draw(){
-    x.clearRect(0,0,c.width,c.height);
-    pts.forEach(function(p){ p.x+=p.vx; p.y+=p.vy; if(p.x<0||p.x>c.width)p.vx*=-1; if(p.y<0||p.y>c.height)p.vy*=-1; });
-    for(var i=0;i<pts.length;i++){
-      for(var j=i+1;j<pts.length;j++){
-        var dx=pts[i].x-pts[j].x, dy=pts[i].y-pts[j].y, d=Math.sqrt(dx*dx+dy*dy);
-        if(d<185){ x.beginPath(); x.moveTo(pts[i].x,pts[i].y); x.lineTo(pts[j].x,pts[j].y); x.strokeStyle='rgba(0,160,255,'+(.14*(1-d/185))+')'; x.lineWidth=.75; x.stroke(); }
-      }
-      x.beginPath(); x.arc(pts[i].x,pts[i].y,pts[i].r,0,Math.PI*2); x.fillStyle='rgba(0,160,255,.42)'; x.fill();
+      --shadow: 0 22px 60px rgba(0,0,0,.50);
+      --radius-xl: 22px;
+      --radius-lg: 16px;
+      --radius-md: 12px;
     }
-    requestAnimationFrame(draw);
-  }
-  draw();
-})();
 
-// ══════════════════════════════════════════════════
-// ESTADO
-// ══════════════════════════════════════════════════
-var rating=0, municipio='';
-var LABELS=['','😞 Muy mala','😕 Mala','😐 Regular','😊 Buena','🤩 ¡Excelente!'];
-var starBtns=document.querySelectorAll('.star-btn');
-var ratingLbl=document.getElementById('ratingLabel');
+    html, body{
+      min-height: 100vh;
+      background: var(--bg);
+      font-family: "DM Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      overflow-x: hidden;
+    }
 
-// ══════════════════════════════════════════════════
-// MUNICIPIO
-// ══════════════════════════════════════════════════
-function onMunChange(){
-  municipio=document.getElementById('municipioSelect').value;
-  var pid=CFG.placeIds[municipio]||CFG.placeIds._default;
-  document.getElementById('googleLink').href='https://search.google.com/local/writereview?placeid='+pid;
-}
+    body::before{
+      content:"";
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 70% 55% at 50% -10%, rgba(0,191,255,.22) 0%, transparent 65%),
+        radial-gradient(ellipse 55% 55% at 10% 85%, rgba(0,139,139,.16) 0%, transparent 60%),
+        radial-gradient(ellipse 55% 55% at 90% 85%, rgba(255,140,0,.10) 0%, transparent 55%);
+      pointer-events:none;
+      z-index:0;
+    }
 
-// ══════════════════════════════════════════════════
-// ESTRELLAS — hover suave (evaluacion-nfc) + badges (intercom-review)
-// ══════════════════════════════════════════════════
-starBtns.forEach(function(btn){
-  btn.addEventListener('mouseenter',function(){
-    var v=+btn.dataset.val;
-    starBtns.forEach(function(b,i){ b.classList.remove('lit','selected'); b.classList.toggle('hover',i<v); });
-    ratingLbl.textContent=LABELS[v];
-  });
-  btn.addEventListener('mouseleave',function(){
-    starBtns.forEach(function(b){ b.classList.remove('hover'); });
-    ratingLbl.textContent=rating?LABELS[rating]:'';
-    refreshStars();
-  });
-});
+    .wrapper{
+      position: relative; z-index: 1;
+      min-height: 100vh;
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      padding: 34px 18px calc(38px + env(safe-area-inset-bottom));
+      gap: 12px;
+    }
 
-function refreshStars(){
-  starBtns.forEach(function(b,i){ b.classList.toggle('lit',i<rating-1); b.classList.toggle('selected',i===rating-1); });
-}
+    /* Brand header */
+    .brand{
+      width: 100%;
+      max-width: 420px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      animation: fadeUp .6s ease both;
+    }
+    .brand-card{
+      width: 100%;
+      border-radius: var(--radius-xl);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.05));
+      border: 1px solid rgba(0,191,255,.14);
+      box-shadow: 0 14px 40px rgba(0,0,0,.35);
+      padding: 14px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+      overflow:hidden;
+    }
+    .brand-card::before{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        radial-gradient(480px 220px at 15% 0%, rgba(0,191,255,.16), transparent 60%),
+        radial-gradient(460px 220px at 90% 100%, rgba(0,139,139,.12), transparent 60%);
+      pointer-events:none;
+    }
+    .brand-logo{
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap: 12px;
+    }
+    .brand-logo img{
+      height: 54px;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 0 14px rgba(0,191,255,.18));
+    }
+    /* fallback si no carga el logo */
+    .brand-fallback{
+      display:none;
+      font-family:"Syne", sans-serif;
+      font-weight: 800;
+      letter-spacing: .06em;
+      color: var(--white);
+      font-size: 18px;
+    }
+    .brand-meta{
+      display:none; /* opcional si quieres texto al lado del logo */
+      flex-direction:column;
+      gap: 2px;
+    }
+    .brand-meta .small{
+      font-size: 10px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.55);
+    }
+    .brand-meta .line{
+      height: 2px;
+      width: 64px;
+      background: linear-gradient(90deg, var(--cyan), var(--orange));
+      opacity:.75;
+      border-radius: 999px;
+    }
 
-function selectStar(val){
-  rating=val; refreshStars();
-  ratingLbl.textContent=LABELS[val];
-  document.getElementById('confirmBtn').classList.add('visible');
-  document.getElementById('chipsRow').style.display=(val>=2&&val<=4)?'flex':'none';
-}
+    /* Main card */
+    .card{
+      width:100%;
+      max-width: 420px;
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.05));
+      border: 1px solid rgba(0,191,255,.14);
+      border-radius: var(--radius-xl);
+      padding: 30px 24px;
+      box-shadow: var(--shadow), 0 0 0 1px rgba(255,255,255,.04);
+      position:relative;
+      overflow:hidden;
+      animation: fadeUp .6s .06s ease both;
+    }
+    .card::before{
+      content:"";
+      position:absolute; left:0; right:0; top:0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan), var(--orange), transparent);
+      opacity:.80;
+    }
+    .card::after{
+      content:"";
+      position:absolute; inset:0;
+      background: radial-gradient(600px 220px at 50% 0%, rgba(0,191,255,.10), transparent 70%);
+      pointer-events:none;
+    }
 
-function toggleChip(id){ document.getElementById(id).classList.toggle('active'); }
+    .screen{ display:none; }
+    .screen.active{ display:block; }
 
-// ══════════════════════════════════════════════════
-// NAVEGACIÓN
-// ══════════════════════════════════════════════════
-function showScreen(id){
-  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
-  var el=document.getElementById(id);
-  el.classList.add('active');
-  el.style.animation='none'; el.offsetHeight; el.style.animation='fadeUp .5s ease both';
-  window.scrollTo(0,0);
-}
+    .kicker{
+      font-size: 10px;
+      letter-spacing: .20em;
+      text-transform: uppercase;
+      color: var(--muted2);
+      margin-bottom: 8px;
+      text-align:center;
+    }
+    .title{
+      font-family:"Syne", sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      text-align:center;
+      line-height:1.25;
+      margin-bottom: 6px;
+    }
+    .subtitle{
+      font-size: 13px;
+      color: var(--muted);
+      text-align:center;
+      line-height:1.55;
+      margin-bottom: 18px;
+    }
 
-function confirmRating(){
-  if(!rating) return;
-  if(rating>=4){ showScreen('screenGoogle'); }
-  else{
-    document.getElementById('negBadge').textContent='★ '+rating+' estrella'+(rating>1?'s':'');
-    if(municipio&&CFG.munNames[municipio]) document.getElementById('formMunicipio').value=CFG.munNames[municipio];
-    showScreen('screenForm');
-  }
-}
+    /* Stars */
+    .stars-row{
+      display:flex;
+      justify-content:center;
+      gap: 10px;
+      margin: 10px 0 10px;
+    }
+    .star-btn{
+      background:none; border:none;
+      cursor:pointer;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .12s ease;
+    }
+    .star-btn:active{ transform: scale(.96); }
 
-function onGoogleClick(){
-  console.log('Google review',{rating:rating,municipio:municipio});
-  setTimeout(function(){ goThanks('google'); },1800);
-}
+    .star-tile{
+      width: 52px; height: 52px;
+      border-radius: 16px;
+      background: rgba(0,31,63,.55);
+      border: 1px solid rgba(255,255,255,.10);
+      display:flex; align-items:center; justify-content:center;
+      transition: background .18s, border-color .18s, box-shadow .18s, transform .18s;
+      position:relative;
+      overflow:hidden;
+    }
+    .star-tile::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(circle at 25% 15%, rgba(0,191,255,.14), transparent 55%);
+      opacity:.85;
+    }
+    .star-tile svg{ width: 22px; height: 22px; position:relative; }
+    .star-tile svg path{ fill: rgba(255,255,255,.22); transition: fill .18s; }
 
-function goThanks(origin){
-  if(origin==='google'){
-    document.getElementById('thanksTitle').textContent='¡Gracias por tu reseña!';
-    document.getElementById('thanksSub').textContent='Tu opinión ayuda a otros usuarios de la región a conocer Intercom.';
-  } else if(origin==='form'){
-    document.getElementById('thanksTitle').textContent='¡Reporte recibido!';
-    document.getElementById('thanksSub').innerHTML='Nuestro equipo técnico fue notificado. Te contactamos pronto si dejaste tus datos.<br><span style="font-size:11px;opacity:.55;font-style:italic">Our team has been notified. We\'ll reach out soon.</span>';
-  } else {
-    document.getElementById('thanksTitle').textContent='¡Gracias!';
-    document.getElementById('thanksSub').textContent='Tu opinión nos ayuda a mejorar el servicio en tu municipio.';
-  }
-  showScreen('screenThanks');
-}
+    .star-btn.hover .star-tile{
+      background: rgba(0,191,255,.14);
+      border-color: rgba(0,191,255,.35);
+      box-shadow: 0 0 0 4px rgba(0,191,255,.08), 0 10px 24px rgba(0,0,0,.18);
+    }
+    .star-btn.hover .star-tile svg path{ fill: var(--cyan); }
 
-function goHome(){
-  rating=0; municipio='';
-  starBtns.forEach(function(b){ b.classList.remove('lit','selected','hover'); });
-  ratingLbl.textContent='';
-  document.getElementById('confirmBtn').classList.remove('visible');
-  document.getElementById('chipsRow').style.display='none';
-  document.getElementById('municipioSelect').value='';
-  ['inputName','inputPhone','inputComment'].forEach(function(id){ var el=document.getElementById(id); if(el){el.value='';el.style.borderColor='';} });
-  ['telErr','telOk'].forEach(function(id){ document.getElementById(id).style.display='none'; });
-  showScreen('screenRating');
-}
+    .star-btn.selected .star-tile{
+      background: rgba(0,191,255,.20);
+      border-color: rgba(0,191,255,.60);
+      box-shadow: 0 0 0 5px rgba(0,191,255,.10), 0 14px 32px rgba(0,0,0,.22);
+      transform: translateY(-1px);
+    }
+    .star-btn.selected .star-tile svg path{ fill: var(--cyan); }
 
-// ══════════════════════════════════════════════════
-// VALIDACIÓN TELÉFONO (evaluacion-nfc)
-// ══════════════════════════════════════════════════
-function validateTel(){
-  var input=document.getElementById('inputPhone');
-  var val=input.value.replace(/\D/g,'');
-  var err=document.getElementById('telErr'), ok=document.getElementById('telOk');
-  if(!input.value.trim()){ input.style.borderColor=''; err.style.display=ok.style.display='none'; return true; }
-  var v=val.length>=7&&val.length<=15;
-  input.style.borderColor=v?'#00D084':'#E05757';
-  err.style.display=v?'none':'block'; ok.style.display=v?'block':'none';
-  input.value=val; return v;
-}
+    .rating-label{
+      text-align:center;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--cyan);
+      min-height: 18px;
+      letter-spacing: .02em;
+      margin-bottom: 10px;
+    }
+    .hint{
+      text-align:center;
+      font-size: 12px;
+      color: var(--muted2);
+      margin-top: 6px;
+    }
 
-// ══════════════════════════════════════════════════
-// FORMULARIO + WHATSAPP SOPORTE
-// ══════════════════════════════════════════════════
-function submitForm(){
-  var commentEl=document.getElementById('inputComment'), comment=commentEl.value.trim();
-  if(!comment){ commentEl.style.borderColor='#E05757'; commentEl.focus(); return; }
-  commentEl.style.borderColor='';
-  var phoneInput=document.getElementById('inputPhone');
-  if(phoneInput.value.trim()&&!validateTel()){ phoneInput.focus(); return; }
+    /* Badge */
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(0,139,139,.12);
+      border: 1px solid rgba(0,139,139,.28);
+      color: rgba(255,255,255,.90);
+      font-size: 12px;
+      font-weight: 600;
+      margin: 0 auto 14px;
+    }
+    .badge .dot{
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--orange);
+      box-shadow: 0 0 0 4px rgba(255,140,0,.12);
+    }
 
-  var lada=document.getElementById('lada').value;
-  var telVal=phoneInput.value.trim();
-  var phone=telVal?lada+telVal:'No indicado';
-  var name=document.getElementById('inputName').value.trim()||'Anónimo';
-  var mun=document.getElementById('formMunicipio').value||CFG.munNames[municipio]||'No indicado';
-  var fecha=new Date().toLocaleString('es-CO',{timeZone:'America/Bogota',dateStyle:'short',timeStyle:'short'});
+    /* Form */
+    .form{ margin-top: 6px; }
+    .form-group{ text-align:left; margin-bottom: 14px; }
 
-  var chips=[];
-  [['chipV','📶 Velocidad'],['chipE','🔗 Estabilidad'],['chipA','🎧 Atención']].forEach(function(c){
-    if(document.getElementById(c[0]).classList.contains('active')) chips.push(c[1]);
-  });
+    label{
+      display:block;
+      font-size: 11px;
+      color: var(--muted2);
+      margin-bottom: 6px;
+      font-weight: 600;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+    }
+    input, textarea, select{
+      width: 100%;
+      background: rgba(0,31,63,.55);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 12px;
+      padding: 12px 12px;
+      color: var(--text);
+      font-size: 14px;
+      outline:none;
+      transition: border-color .18s, box-shadow .18s;
+      resize: none;
+    }
+    input:focus, textarea:focus, select:focus{
+      border-color: rgba(0,191,255,.55);
+      box-shadow: 0 0 0 4px rgba(0,191,255,.12);
+    }
+    textarea{ min-height: 92px; }
 
-  var ratingText=rating===1?'1 estrella — Muy mala':rating===2?'2 estrellas — Mala':'3 estrellas — Regular';
+    .row{ display:flex; gap: 8px; }
+    .row > * { flex: 1; }
 
-  var msg=
-    '🔴 *REPORTE INTERCOM — SERVICIO INSATISFECHO*\n'+
-    '━━━━━━━━━━━━━━━━━━━━━━\n'+
-    '📍 *Municipio:* '+mun+'\n'+
-    '⭐ *Calificación:* '+ratingText+'\n'+
-    (chips.length?'🔍 *Área del problema:* '+chips.join(', ')+'\n':'')+
-    '👤 *Cliente:* '+name+'\n'+
-    '📞 *Contacto:* '+phone+'\n'+
-    '🕐 *Fecha:* '+fecha+'\n'+
-    '━━━━━━━━━━━━━━━━━━━━━━\n'+
-    '💬 *Comentario:*\n'+comment+'\n'+
-    '━━━━━━━━━━━━━━━━━━━━━━\n'+
-    '_Reporte automático — Sistema NFC Intercom_';
+    .help{
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+      line-height: 1.4;
+    }
 
-  window.open('https://wa.me/'+CFG.waSoporte+'?text='+encodeURIComponent(msg),'_blank');
-  console.log('Reporte enviado',{rating:rating,municipio:mun,name:name,phone:phone,chips:chips,comment:comment,ts:new Date().toISOString()});
-  goThanks('form');
-}
-</script>
+    .status{
+      display:none;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-size: 13px;
+      line-height: 1.45;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.86);
+    }
+    .status.show{ display:block; }
+    .status.ok{
+      border-color: rgba(0,208,132,.22);
+      background: rgba(0,208,132,.10);
+    }
+    .status.err{
+      border-color: rgba(255,92,92,.22);
+      background: rgba(255,92,92,.10);
+    }
+
+    /* Buttons */
+    .btn{
+      width: 100%;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap: 10px;
+      border: none;
+      cursor:pointer;
+      border-radius: 14px;
+      padding: 14px 14px;
+      font-family: "Syne", sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      transition: transform .14s, box-shadow .18s, opacity .14s;
+      -webkit-tap-highlight-color: transparent;
+      text-decoration:none;
+      user-select:none;
+    }
+    .btn:active{ transform: scale(.99); opacity:.92; }
+
+    .btn-primary{
+      background: var(--orange);
+      color: var(--navy);
+      box-shadow: 0 10px 28px rgba(255,140,0,.22);
+    }
+    .btn-primary:hover{ box-shadow: 0 14px 38px rgba(255,140,0,.28); transform: translateY(-1px); }
+
+    .btn-secondary{
+      margin-top: 10px;
+      background: rgba(0,191,255,.12);
+      color: var(--white);
+      border: 1px solid rgba(0,191,255,.22);
+    }
+    .btn-secondary:hover{ box-shadow: 0 14px 38px rgba(0,191,255,.16); transform: translateY(-1px); }
+
+    .btn-ghost{
+      margin-top: 10px;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid rgba(255,255,255,.10);
+    }
+    .btn-ghost:hover{ border-color: rgba(255,255,255,.22); color: rgba(255,255,255,.82); }
+
+    .icon{
+      width: 66px; height: 66px;
+      border-radius: 50%;
+      display:flex; align-items:center; justify-content:center;
+      margin: 0 auto 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+    }
+    .icon.ok{
+      border-color: rgba(0,208,132,.22);
+      background: rgba(0,208,132,.10);
+    }
+    .icon.err{
+      border-color: rgba(255,92,92,.22);
+      background: rgba(255,92,92,.10);
+    }
+
+    /* Footer */
+    .footer{
+      width: 100%;
+      max-width: 560px;
+      text-align:center;
+      padding: 6px 10px 0;
+      color: rgba(255,255,255,.30);
+      position: relative;
+      animation: fadeUp .6s .12s ease both;
+      user-select:none;
+    }
+    .footer::before{
+      content:"";
+      display:block;
+      height: 1px;
+      max-width: 560px;
+      margin: 6px auto 12px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.10), transparent);
+    }
+    .footer-top{
+      font-size: 10px;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      line-height: 1.6;
+      color: rgba(255,255,255,.32);
+      padding: 2px 0;
+    }
+    .footer-top a{
+      color: rgba(255,255,255,.36);
+      text-decoration:none;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      padding-bottom: 2px;
+    }
+    .footer-top a:hover{ color: rgba(255,255,255,.56); border-bottom-color: rgba(0,191,255,.25); }
+    .footer-by{
+      margin-top: 8px;
+      font-size: 12px;
+      letter-spacing: .06em;
+      color: rgba(255,255,255,.30);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap: 8px;
+    }
+    .footer-by a{
+      color: rgba(0,191,255,.88);
+      text-decoration:none;
+      font-weight: 600;
+    }
+    .footer-by a:hover{ color: var(--cyan); text-decoration: underline; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper">
+    <!-- LOGO INTEGRADO -->
+    <header class="brand" aria-label="INTERCOM">
+      <div class="brand-card">
+        <div class="brand-logo">
+          <!-- Recomendación: sube este archivo a tu hosting y reemplaza el src por tu URL pública -->
+          <img
+            src="intercomst-logo-300x118.png"
+            alt="INTERCOM Soluciones Tecnológicas SAS"
+            onerror="this.style.display='none'; document.getElementById('brandFallback').style.display='block';"
+          />
+          <div class="brand-fallback" id="brandFallback">INTERCOM</div>
+        </div>
+      </div>
+    </header>
+
+    <div class="card">
+      <!-- Screen: Rating -->
+      <section class="screen active" id="screen-eval">
+        <div class="kicker">EVALUACIÓN RÁPIDA</div>
+        <div class="title">¿Cómo califica nuestro servicio?</div>
+        <div class="subtitle">Tu opinión nos ayuda a mejorar.</div>
+
+        <div class="stars-row" id="starsRow" role="radiogroup" aria-label="Calificación de 1 a 5"></div>
+
+        <div class="rating-label" id="ratingLabel">Selecciona una estrella</div>
+        <div class="hint">Gracias por ayudarnos a elevar la calidad.</div>
+      </section>
+
+      <!-- Screen: Positive (Google) -->
+      <section class="screen" id="screen-positive">
+        <div class="icon ok" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+            <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <div class="title">¡Gracias!</div>
+        <div class="subtitle">Si quieres, también puedes dejar una reseña en Google.</div>
+
+        <a class="btn btn-primary" id="googleBtn" href="#" target="_blank" rel="noopener">
+          Dejar reseña en Google
+        </a>
+
+        <button class="btn btn-ghost" type="button" onclick="goHome()">Volver</button>
+      </section>
+
+      <!-- Screen: Form (Formspree) -->
+      <section class="screen" id="screen-form">
+        <div class="icon err" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+            <path d="M12 9v4m0 4h.01" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <div class="title">Cuéntanos qué podemos mejorar</div>
+        <div class="subtitle">Con tu mensaje podremos actuar más rápido.</div>
+
+        <div style="display:flex; justify-content:center;">
+          <div class="badge" id="formBadge"><span class="dot"></span> Calificación: —</div>
+        </div>
+
+        <form class="form" id="feedbackForm" novalidate>
+          <!-- Metadata -->
+          <input type="hidden" name="rating" id="f_rating" value="" />
+          <input type="hidden" name="rating_label" id="f_rating_label" value="" />
+          <input type="hidden" name="timestamp_local" id="f_time" value="" />
+          <input type="hidden" name="page_url" id="f_url" value="" />
+          <input type="hidden" name="user_agent" id="f_ua" value="" />
+          <input type="hidden" name="source" value="nfc_experiencia_intercom" />
+
+          <div class="form-group">
+            <label for="comentario">Mensaje (requerido)</label>
+            <textarea id="comentario" name="comentario" placeholder="Escribe tu comentario..." required></textarea>
+            <div class="help">Si puedes, incluye municipio y hora aproximada.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="nombre">Nombre (opcional)</label>
+            <input id="nombre" name="nombre" type="text" placeholder="Tu nombre" />
+          </div>
+
+          <div class="form-group">
+            <label>WhatsApp (opcional)</label>
+            <div class="row">
+              <select id="lada" name="lada" aria-label="Código país">
+                <option value="+57">🇨🇴 +57</option>
+                <option value="+1">🇺🇸 +1</option>
+                <option value="+52">🇲🇽 +52</option>
+                <option value="+54">🇦🇷 +54</option>
+                <option value="+56">🇨🇱 +56</option>
+                <option value="+51">🇵🇪 +51</option>
+                <option value="+58">🇻🇪 +58</option>
+                <option value="+593">🇪🇨 +593</option>
+                <option value="+34">🇪🇸 +34</option>
+              </select>
+              <input id="telefono" name="telefono" type="tel" inputmode="numeric" placeholder="Solo dígitos" />
+            </div>
+            <div class="help">Si lo dejas, podremos contactarte.</div>
+          </div>
+
+          <button class="btn btn-primary" id="sendBtn" type="submit">Enviar</button>
+          <button class="btn btn-secondary" type="button" onclick="goHome()">Volver</button>
+
+          <div class="status" id="statusBox"></div>
+        </form>
+      </section>
+
+      <!-- Screen: Thanks -->
+      <section class="screen" id="screen-thanks">
+        <div class="icon ok" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+            <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <div class="title">Gracias</div>
+        <div class="subtitle">Tu mensaje fue enviado correctamente.</div>
+
+        <button class="btn btn-ghost" type="button" onclick="goHome()">Finalizar</button>
+      </section>
+    </div>
+
+    <footer class="footer" aria-label="Información de la marca">
+      <div class="footer-top">
+        <a href="https://intercomst.com.co" target="_blank" rel="noopener">INTERCOMST.COM.CO</a>
+        &nbsp;·&nbsp; VILLA DE LEYVA &nbsp;·&nbsp; SÁCHICA &nbsp;·&nbsp; RÁQUIRA &nbsp;·&nbsp; TINJACÁ &nbsp;·&nbsp; SUTAMARCHÁN
+      </div>
+      <div class="footer-by">
+        <span>by</span>
+        <a href="https://instagram.com/angelgutierrezdigital" target="_blank" rel="noopener">@angelgutierrezdigital</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    /* =========================
+       CONFIG (EDITA AQUÍ)
+       ========================= */
+    const FORMSPREE_ENDPOINT = "https://formspree.io/f/REEMPLAZA_AQUI";
+    const GOOGLE_REVIEW_URL  = "https://g.page/r/TU-LINK-GOOGLE/review";
+
+    /* =========================
+       Labels
+       ========================= */
+    const ratingLabels = {
+      1: "Muy mala",
+      2: "Mala",
+      3: "Regular",
+      4: "Buena",
+      5: "Excelente"
+    };
+
+    let selectedRating = 0;
+
+    const screens = {
+      eval: document.getElementById("screen-eval"),
+      positive: document.getElementById("screen-positive"),
+      form: document.getElementById("screen-form"),
+      thanks: document.getElementById("screen-thanks")
+    };
+
+    function showScreen(key){
+      Object.values(screens).forEach(s => s.classList.remove("active"));
+      screens[key].classList.add("active");
+      window.scrollTo(0,0);
+    }
+
+    function goHome(){
+      selectedRating = 0;
+      document.getElementById("ratingLabel").textContent = "Selecciona una estrella";
+      document.getElementById("comentario").value = "";
+      document.getElementById("nombre").value = "";
+      document.getElementById("telefono").value = "";
+      setStatus("", "");
+      renderStars(0);
+      showScreen("eval");
+    }
+
+    /* =========================
+       Stars
+       ========================= */
+    const starsRow = document.getElementById("starsRow");
+    const ratingLabelEl = document.getElementById("ratingLabel");
+
+    function starSVG(){
+      return `
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M12 2.5l2.9 6.1 6.7.6-5 4.3 1.5 6.5L12 16.9 5.9 20l1.5-6.5-5-4.3 6.7-.6L12 2.5z"></path>
+        </svg>
+      `;
+    }
+
+    function renderStars(active){
+      starsRow.innerHTML = "";
+      for(let i=1;i<=5;i++){
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "star-btn" + (i <= active ? " selected" : "");
+        btn.setAttribute("role", "radio");
+        btn.setAttribute("aria-checked", i === active ? "true" : "false");
+        btn.setAttribute("aria-label", `${i} de 5`);
+        btn.dataset.value = String(i);
+
+        btn.innerHTML = `<div class="star-tile">${starSVG()}</div>`;
+
+        btn.addEventListener("mouseenter", () => {
+          const v = i;
+          [...starsRow.children].forEach((b, idx) => {
+            b.classList.toggle("hover", (idx+1) <= v);
+          });
+          ratingLabelEl.textContent = `${v}/5 · ${ratingLabels[v]}`;
+        });
+
+        btn.addEventListener("mouseleave", () => {
+          [...starsRow.children].forEach(b => b.classList.remove("hover"));
+          ratingLabelEl.textContent = selectedRating
+            ? `${selectedRating}/5 · ${ratingLabels[selectedRating]}`
+            : "Selecciona una estrella";
+        });
+
+        btn.addEventListener("click", () => selectRating(i));
+        btn.addEventListener("keydown", (e) => {
+          if(e.key === "Enter" || e.key === " "){
+            e.preventDefault();
+            selectRating(i);
+          }
+        });
+
+        starsRow.appendChild(btn);
+      }
+    }
+
+    renderStars(0);
+
+    function selectRating(val){
+      selectedRating = val;
+      renderStars(val);
+      ratingLabelEl.textContent = `${val}/5 · ${ratingLabels[val]}`;
+
+      // Lógica interna (sin mostrarlo en el copy principal):
+      // >=4 → pantalla Google
+      // <4  → formulario (Formspree)
+      setTimeout(() => {
+        if(val >= 4){
+          document.getElementById("googleBtn").href = GOOGLE_REVIEW_URL;
+          showScreen("positive");
+        } else {
+          hydrateHiddenFields();
+          document.getElementById("formBadge").innerHTML =
+            `<span class="dot"></span> Calificación: <strong>${val}/5</strong> · ${ratingLabels[val]}`;
+          showScreen("form");
+        }
+      }, 220);
+    }
+
+    function hydrateHiddenFields(){
+      const now = new Date();
+      document.getElementById("f_rating").value = String(selectedRating);
+      document.getElementById("f_rating_label").value = ratingLabels[selectedRating] || "";
+      document.getElementById("f_time").value = now.toLocaleString();
+      document.getElementById("f_url").value = window.location.href;
+      document.getElementById("f_ua").value = navigator.userAgent;
+    }
+
+    /* =========================
+       Formspree submit
+       ========================= */
+    const form = document.getElementById("feedbackForm");
+    const sendBtn = document.getElementById("sendBtn");
+    const statusBox = document.getElementById("statusBox");
+
+    function setStatus(type, message){
+      statusBox.className = "status";
+      statusBox.textContent = "";
+      if(!message) return;
+      statusBox.classList.add("show");
+      if(type === "ok") statusBox.classList.add("ok");
+      if(type === "err") statusBox.classList.add("err");
+      statusBox.textContent = message;
+    }
+
+    function normalizeDigits(v){
+      return (v || "").replace(/\D/g, "");
+    }
+
+    function validateForm(){
+      const comentario = document.getElementById("comentario");
+      const telefono = document.getElementById("telefono");
+
+      if(!comentario.value.trim()){
+        comentario.focus();
+        comentario.style.borderColor = "rgba(255,92,92,.70)";
+        setStatus("err", "Por favor escribe tu mensaje (campo requerido).");
+        return false;
+      }
+      comentario.style.borderColor = "";
+
+      const digits = normalizeDigits(telefono.value.trim());
+      if(telefono.value.trim() && (digits.length < 7 || digits.length > 15)){
+        telefono.focus();
+        telefono.style.borderColor = "rgba(255,92,92,.70)";
+        setStatus("err", "WhatsApp inválido: usa solo dígitos (mín. 7, máx. 15).");
+        return false;
+      }
+      telefono.style.borderColor = "";
+      telefono.value = digits;
+
+      return true;
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      setStatus("", "");
+
+      if(!validateForm()) return;
+
+      if(!FORMSPREE_ENDPOINT || FORMSPREE_ENDPOINT.includes("REEMPLAZA_AQUI")){
+        setStatus("err", "Falta configurar el endpoint de Formspree (FORMSPREE_ENDPOINT).");
+        return;
+      }
+
+      hydrateHiddenFields();
+
+      sendBtn.disabled = true;
+      sendBtn.style.opacity = ".75";
+      setStatus("", "Enviando...");
+
+      try{
+        const formData = new FormData(form);
+
+        const lada = document.getElementById("lada").value;
+        const tel  = document.getElementById("telefono").value.trim();
+        formData.set("whatsapp", tel ? `${lada}${tel}` : "");
+
+        const res = await fetch(FORMSPREE_ENDPOINT, {
+          method: "POST",
+          headers: { "Accept": "application/json" },
+          body: formData
+        });
+
+        if(res.ok){
+          setStatus("ok", "Enviado correctamente.");
+          showScreen("thanks");
+        } else {
+          let errMsg = "No se pudo enviar. Intenta de nuevo.";
+          try{
+            const data = await res.json();
+            if(data?.errors?.length) errMsg = data.errors[0].message || errMsg;
+          } catch (_) {}
+          setStatus("err", errMsg);
+        }
+      } catch (_){
+        setStatus("err", "Error de conexión. Revisa internet e intenta nuevamente.");
+      } finally{
+        sendBtn.disabled = false;
+        sendBtn.style.opacity = "1";
+      }
+    });
+  </script>
 </body>
 </html>
